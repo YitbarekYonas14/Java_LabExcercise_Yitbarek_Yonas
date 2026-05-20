@@ -127,7 +127,7 @@ This repository contains **TWO different applications** that use MySQL databases
 | Application | Database Name | Purpose |
 |-------------|---------------|---------|
 | **ChatApp** | `telegram_clone` | Stores user accounts, messages, groups |
-| **University Package** | `university_db` | Stores student and teacher records |
+| **University,UniversityJavaFX,UinversityRMI** | `university_db` | Stores student and teacher records |
 
 ### Step-by-Step Database Setup:
 
