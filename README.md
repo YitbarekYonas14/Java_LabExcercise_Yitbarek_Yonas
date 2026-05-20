@@ -118,6 +118,121 @@ A simple but complete text editor that made file operations second nature to me.
 - Create, open, edit, and save text files
 - Cut, copy, paste, and select all functionality
 ---
+## 🗄️ Database Setup (Required Before Running)
+
+### ⚠️ IMPORTANT: Create Databases and Tables First!
+
+This repository contains **TWO different applications** that use MySQL databases:
+
+| Application | Database Name | Purpose |
+|-------------|---------------|---------|
+| **ChatApp** | `telegram_clone` | Stores user accounts, messages, groups |
+| **University Package** | `university_db` | Stores student and teacher records |
+
+### Step-by-Step Database Setup:
+
+#### 1. **Start MySQL Server**
+
+| XAMPP (Windows/Linux) | MAMP (macOS) | Command Line (Linux) |
+|-----------------------|--------------|---------------------|
+| Open XAMPP Control Panel → Start MySQL | Start MAMP → MySQL will start automatically | `sudo systemctl start mysql` |
+
+#### 2. **Create Both Databases and Tables**
+
+Open your MySQL client (phpMyAdmin or terminal) and run:
+
+```sql
+-- ============================================
+-- CREATE DATABASES
+-- ============================================
+
+-- Create ChatApp database
+CREATE DATABASE telegram_clone;
+
+-- Create University database
+CREATE DATABASE university_db;
+
+-- ============================================
+-- USE ChatApp DATABASE AND CREATE TABLES
+-- ============================================
+
+USE telegram_clone;
+
+-- Users table (stores user credentials)
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Private messages table (stores 1-on-1 conversations)
+CREATE TABLE IF NOT EXISTS private_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender VARCHAR(50) NOT NULL,
+    receiver VARCHAR(50) NOT NULL,
+    message TEXT,
+    file_path VARCHAR(255),
+    is_file BOOLEAN DEFAULT FALSE,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_conv (sender, receiver)
+);
+
+-- Group messages table (stores group chat messages)
+CREATE TABLE IF NOT EXISTS group_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender VARCHAR(50) NOT NULL,
+    group_name VARCHAR(50) NOT NULL,
+    message TEXT,
+    file_path VARCHAR(255),
+    is_file BOOLEAN DEFAULT FALSE,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Group members table (tracks who is in which group)
+CREATE TABLE IF NOT EXISTS group_members (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    group_name VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_gm (group_name, username)
+);
+
+-- ============================================
+-- USE University DATABASE AND CREATE TABLES
+-- ============================================
+
+USE university_db;
+
+-- Students table
+CREATE TABLE IF NOT EXISTS students (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    section CHAR(1) NOT NULL,
+    year INT NOT NULL
+);
+
+-- Teachers table
+CREATE TABLE IF NOT EXISTS teachers (
+    id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    subject VARCHAR(100) NOT NULL,
+    experience INT NOT NULL
+);
+
+-- ============================================
+-- VERIFY EVERYTHING WAS CREATED
+-- ============================================
+
+-- Check ChatApp tables
+USE telegram_clone;
+SHOW TABLES;
+
+-- Check University tables
+USE university_db;
+SHOW TABLES;
 ## 🚀 How to Clone, Compile, and Run
 
 ### Prerequisites
